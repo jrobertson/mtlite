@@ -2,12 +2,15 @@
 
 # file: mtlite.rb
 
-require 'rdiscount'
+require 'markdown'
 
 class MTLite
-  
   def initialize(raw_msg)
+    @raw_msg = raw_msg
+  end
 
+  def to_html()
+    raw_msg = @raw_msg
     raw_msg.sub!(/\[\[.*\]/){|x| x[0..-2].gsub(/[^\n](\[[x\s]?\])/,'<br/>\1') }
     raw_msg = raw_msg.gsub(/\[\s*\]/,'&#9744;').gsub(/\[x\]/,'&#9745;')
     raw_msg = raw_msg.gsub('1/4','&#188;').gsub('1/2','&#189;').gsub('3/4','&#190;')
@@ -38,24 +41,11 @@ class MTLite
 
     end
 
-    msg = RDiscount.new(raw_msg).to_html.gsub(/<\/?p[^>]*>/,'')
+    msg = Markdown.new(raw_msg).to_html.gsub(/<\/?p[^>]*>/,'')
     msg.gsub!(/(?:^(https?:[^\s]+)|\s(https?:[^\s]+))/,' <a href="\2">\2</a>')    
     msg.gsub!(/<a /,'<a target="_blank" ')
-    
-    @msg = msg
-    
-  end
+    len = msg.gsub(/<\/?.[^>]*>/,'').length
 
-  def to_html()
-    @msg
+    msg
   end
-  
-  def length
-    @msg.gsub(/<\/?.[^>]*>/,'').length
-  end
-  
-  def to_s
-    @msg.gsub('<br/>',"\n").gsub(/<\/?.[^>]*>/,'')
-  end
-  
 end

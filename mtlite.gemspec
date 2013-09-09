@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
   s.name = 'mtlite'
-  s.version = '0.1.0'
+  s.version = '0.1.1'
   s.summary = 'mtlite'
   s.authors = ['James Robertson']
   s.files = Dir['lib/**/*.rb']
-  s.add_dependency('markdown')
+  s.add_dependency('rdiscount')
   s.signing_key = '../privatekeys/mtlite.pem'
   s.cert_chain  = ['gem-public_cert.pem']
   s.license = 'MIT'
