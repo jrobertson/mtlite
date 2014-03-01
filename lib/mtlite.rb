@@ -11,7 +11,7 @@ class MTLite
     # if it looks like an MtLite list make it an MtLite list
     # e.g. "a todo list:\n* line 1\n* line 2" => 
     #                                       a todo list: [* line 1 * line 2]
-    raw_msg.sub!(/^(?:[\*\[#][^\n]+\n?)+/,'[\0]')
+    raw_msg.sub!(/^(?:[\*#][^\n]+\n?)+/,'[\0]')
     raw_msg.gsub!(/\n/,' ')
 
 
