@@ -8,6 +8,11 @@ class MTLite
   
   def initialize(raw_msg)
 
+    @msg = raw_msg.clone
+    
+  end
+
+  def to_html()
     # if it looks like an MtLite list make it an MtLite list
     # e.g. "a todo list:\n* line 1\n* line 2" => 
     #                                       a todo list: [* line 1 * line 2]
@@ -65,12 +70,6 @@ class MTLite
     # add the target attribute to make all hyperlinks open in a new browser tab
     msg.gsub!(/<a /,'<a target="_blank" ')
     
-    @msg = msg
-    
-  end
-
-  def to_html()
-    @msg
   end
   
   def length
@@ -78,7 +77,28 @@ class MTLite
   end
   
   def to_s
-    @msg.gsub('<br/>',"\n").gsub(/<\/?.[^>]*>/,'')
+  
+    msg = @msg
+
+    # remove markdown hyperlink markings
+    msg.sub!(/\[([^\]]+)\]\(([^\)]+)\)/, '\1 \2')
+
+    # generate html lists from mtlite 1-liner lists
+    msg.gsub!(/\[[\*#][^\]]+\]/) do |list|
+
+      if not list[/\n/] then
+
+        symbol = list[1]
+        symbol.prepend '\\' if symbol == '*'
+
+        list.strip[1..-2].split(/#{symbol}/)[1..-1].map{|x| "\n* %s" % x.strip}.join
+      else
+        list
+      end
+
+    end
+
+    msg.gsub('<br/>',"\n").gsub(/<\/?.[^>]*>/,'')
   end
   
 end
