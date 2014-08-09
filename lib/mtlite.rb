@@ -94,7 +94,8 @@ class MTLite
         symbol = list[1]
         symbol.prepend '\\' if symbol == '*'
 
-        list.strip[1..-2].split(/#{symbol}/)[1..-1].map{|x| "\n* %s" % x.strip}.join
+        list.strip[1..-2].split(/#{symbol}/)[1..-1]\
+          .map{|x| "\n* %s" % x.strip}.join + "\n"
       else
         list
       end

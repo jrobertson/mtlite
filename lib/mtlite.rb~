@@ -8,11 +8,13 @@ class MTLite
   
   def initialize(raw_msg)
 
-    @msg = raw_msg.clone
+    @raw_msg = raw_msg
     
   end
 
   def to_html()
+
+    raw_msg = @raw_msg.clone    
     # if it looks like an MtLite list make it an MtLite list
     # e.g. "a todo list:\n* line 1\n* line 2" => 
     #                                       a todo list: [* line 1 * line 2]
@@ -69,6 +71,7 @@ class MTLite
     msg.gsub!(/(?:^(https?:[^\s]+)|\s(https?:[^\s]+))/,' <a href="\2">\2</a>')    
     # add the target attribute to make all hyperlinks open in a new browser tab
     msg.gsub!(/<a /,'<a target="_blank" ')
+    @msg = msg
     
   end
   
@@ -78,7 +81,7 @@ class MTLite
   
   def to_s
   
-    msg = @msg
+    msg = @raw_msg.clone
 
     # remove markdown hyperlink markings
     msg.sub!(/\[([^\]]+)\]\(([^\)]+)\)/, '\1 \2')
@@ -98,7 +101,7 @@ class MTLite
 
     end
 
-    msg.gsub('<br/>',"\n").gsub(/<\/?.[^>]*>/,'')
+    @msg = msg.gsub('<br/>',"\n").gsub(/<\/?.[^>]*>/,'')
   end
   
 end
