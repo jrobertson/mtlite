@@ -8,6 +8,9 @@ class MTLite
   
   def initialize(raw_msg)
 
+    # make the smartlinks into Markdown links
+    raw_msg.gsub!(/\B\?([^\n]+) +(https?:\/\/[^\b]+)\?\B/,'[\1](\2)')
+    
     @raw_msg = raw_msg
     
   end
@@ -41,7 +44,7 @@ class MTLite
     raw_msg.gsub!(/\s-[^-]+-?[^-]+-[\s\]]/) do |x|
       x.sub(/-([&\w]+.*\w+)-/,'<del>\1</del>')
     end
-    
+      
     # append a domain label after the URL
     raw_msg.gsub!(/(?:^\[|\s\[)[^\]]+\]\((https?:\/\/[^\s]+)/) do |x|
       s2 = x[/https?:\/\/([^\/]+)/,1].split(/\./)
@@ -82,9 +85,9 @@ class MTLite
   def to_s
   
     msg = @raw_msg.clone
-
+    
     # remove markdown hyperlink markings
-    msg.sub!(/\[([^\]]+)\]\(([^\)]+)\)/, '\1 \2')
+    msg.gsub!(/\[([^\]]+)\]\(([^\)]+)\)/, '\1 \2')
 
     # generate html lists from mtlite 1-liner lists
     msg.gsub!(/\[[\*#][^\]]+\]/) do |list|
