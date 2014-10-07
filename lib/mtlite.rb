@@ -8,10 +8,8 @@ class MTLite
   
   def initialize(raw_msg)
 
-    # make the smartlinks into Markdown links
-    raw_msg.gsub!(/\B\?([^\n]+) +(https?:\/\/[^\b]+)\?\B/,'[\1](\2)')
-    
-    @raw_msg = raw_msg
+    # make the smartlinks into Markdown links        
+    @raw_msg = smartlink(raw_msg)
     
   end
 
@@ -107,5 +105,15 @@ class MTLite
 
     @msg = msg.gsub('<br/>',"\n").gsub(/<\/?.[^>]*>/,'')
   end
+
+  private
+  
+  def smartlink(s)
+    
+    s.gsub(/\B\?([^\n]+) +(https?:\/\/.*\?)(?=\B)/) do
+      "[%s](%s)" % [$1, ($2).chop]
+    end
+
+  end  
   
 end
