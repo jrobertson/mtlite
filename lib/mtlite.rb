@@ -19,7 +19,7 @@ class MTLite
     # if it looks like an MtLite list make it an MtLite list
     # e.g. "a todo list:\n* line 1\n* line 2" => 
     #                                       a todo list: [* line 1 * line 2]
-    raw_msg.sub!(/^(?:[\*#][^\n]+\n?)+/,'[\0]')
+    raw_msg.sub!(/^(?:[\*#][^\n]+\n?)+/,'[\0]') if raw_msg =~ /\n/
     raw_msg.gsub!(/\n/,' ')
 
 
@@ -68,10 +68,14 @@ class MTLite
     end
 
     msg = RDiscount.new(raw_msg).to_html.gsub(/<\/?p[^>]*>/,'')
+
     # generate anchor tags for URLs which don't have anchor tags
     msg.gsub!(/(?:^(https?:[^\s]+)|\s(https?:[^\s]+))/,' <a href="\2">\2</a>')    
     # add the target attribute to make all hyperlinks open in a new browser tab
     msg.gsub!(/<a /,'<a target="_blank" ')
+    
+    # undecorate h1 headings
+    msg.gsub!(/<h1/,'<h1 style="font-size: 0.8em; font-weight: 600"')
     @msg = msg
     
   end
