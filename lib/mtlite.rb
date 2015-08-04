@@ -75,7 +75,7 @@ class MTLite
 
     msg = RDiscount.new(raw_msg).to_html.gsub(/<\/?p[^>]*>/,'')
 
-    regex = %r([\w\-/?=.#]+)
+    regex = %r([\w\-/?=.#\(\)]+)
     # generate anchor tags for URLs which don't have anchor tags
     msg.gsub!(/(?:^(https?:#{regex})|\s(https?:#{regex}))/,' <a href="\2">\2</a>')    
     # add the target attribute to make all hyperlinks open in a new browser tab

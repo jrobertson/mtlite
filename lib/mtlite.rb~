@@ -3,11 +3,17 @@
 # file: mtlite.rb
 
 require 'rdiscount'
+require 'embiggen'
 
 class MTLite
   
   def initialize(raw_msg)
 
+    # reveal the expanded URL from a shortened URL
+    raw_msg.gsub!(/https?:\/\/[\w\-_\.\/?+&]+/) do |url|      
+      Embiggen::URI(url).expand.to_s
+    end
+    
     # make the smartlinks into Markdown links        
     @raw_msg = smartlink(raw_msg)
     
@@ -77,7 +83,7 @@ class MTLite
     
     # undecorate h1 headings
     msg.gsub!(/<h1/,'<h1 style="font-size: 0.95em; font-weight: 600"')
-    
+        
     @msg = msg
     
   end
