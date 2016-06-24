@@ -41,7 +41,8 @@ class MTLite
 
     # convert fractions using their associated unicode character
     # i.e. 1/4, 1/2, 3/4 
-    raw_msg = raw_msg.gsub('1/4','&#188;').gsub('1/2','&#189;').gsub('3/4','&#190;')
+    raw_msg = raw_msg.gsub('\b1/4\b','&#188;').gsub('\b1/2\b','&#189;')\
+                    .gsub('\b3/4\b','&#190;')
 
     # add strikethru to completed items
     # e.g. -milk cow- becomes <del>milk cow</del>
