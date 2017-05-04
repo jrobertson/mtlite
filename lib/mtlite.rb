@@ -79,6 +79,14 @@ class MTLite
     regex = %r([\w\-/?=.#\(\)]+)
     # generate anchor tags for URLs which don't have anchor tags
     msg.gsub!(/(?:^(https?:#{regex})|\s(https?:#{regex}))/,' <a href="\2">\2</a>')    
+    
+    msg.gsub!(/(?:^(https?:#{regex})|\s(https?:#{regex}))/) do |x|
+      url = $2
+      url2 = url.sub(/^https?:\/\//,'').sub(/^www\./,'')
+      url3 = url2.length > 33 ? url2[0..33] + '…' : url2
+      " <a href='#{url}'>#{url3}</a>"
+    end
+
     # add the target attribute to make all hyperlinks open in a new browser tab
     msg.gsub!(/<a /,'<a target="_blank" ')
     
