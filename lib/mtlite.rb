@@ -37,7 +37,7 @@ class MTLite
     # convert square brackets to unicode check boxes
     # replaces a [] with a unicode checkbox, 
     #                         and [x] with a unicode checked checkbox
-    raw_msg = raw_msg.gsub(/\[\s*\]/,'&#9744;').gsub(/\[x\]/,'&#9745;')
+    raw_msg = raw_msg.gsub(/\[\s*\](?= )/,'&#9744;').gsub(/\[x\]/,'&#9745;')
 
     # convert fractions using their associated unicode character
     # i.e. 1/4, 1/2, 3/4 

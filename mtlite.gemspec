@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'mtlite'
-  s.version = '0.3.3'
+  s.version = '0.3.4'
   s.summary = 'mtlite'
   s.authors = ['James Robertson']
   s.files = Dir['lib/**/*.rb']
