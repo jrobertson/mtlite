@@ -19,7 +19,7 @@ class MTLite
     
   end
 
-  def to_html()
+  def to_html(para: false, ignore_domainlabel: false)
 
     raw_msg = @raw_msg.clone    
     # if it looks like an MtLite list make it an MtLite list
@@ -50,11 +50,15 @@ class MTLite
       x.sub(/-([&\w]+.*\w+)-/,'<del>\1</del>')
     end
       
-    # append a domain label after the URL
-    raw_msg.gsub!(/(?:^\[|\s\[)[^\]]+\]\((https?:\/\/[^\s]+)/) do |x|
-      s2 = x[/https?:\/\/([^\/]+)/,1].split(/\./)
-      r = s2.length >= 3 ? s2[1..-1] :  s2
-      "%s [%s]" % [x, r.join('.')]
+    unless ignore_domainlabel then
+      
+      # append a domain label after the URL
+      raw_msg.gsub!(/(?:^\[|\s\[)[^\]]+\]\((https?:\/\/[^\s]+)/) do |x|
+        s2 = x[/https?:\/\/([^\/]+)/,1].split(/\./)
+        r = s2.length >= 3 ? s2[1..-1] :  s2
+        "%s [%s]" % [x, r.join('.')]
+      end
+      
     end
     
     # generate html lists from mtlite 1-liner lists
@@ -74,7 +78,8 @@ class MTLite
 
     end
 
-    msg = RDiscount.new(raw_msg).to_html.gsub(/<\/?p[^>]*>/,'')
+    msg = RDiscount.new(raw_msg).to_html
+    msg.gsub!(/<\/?p[^>]*>/,'') unless para
 
     regex = %r([\w\-/?=.#\(\)]+)
     # generate anchor tags for URLs which don't have anchor tags
