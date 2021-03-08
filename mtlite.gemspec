@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'mtlite'
-  s.version = '0.4.0'
+  s.version = '0.4.1'
   s.summary = 'Martile Lite generates HTML ideally from 1 line of a condensed kind of markdown language. '
   s.authors = ['James Robertson']
   s.files = Dir['lib/mtlite.rb']

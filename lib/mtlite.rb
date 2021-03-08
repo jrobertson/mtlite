@@ -7,15 +7,24 @@ require 'embiggen'
 
 class MTLite
   
-  def initialize(raw_msg)
+  def initialize(raw_msg, debug: false)
 
+    @debug = debug
+    
     # reveal the expanded URL from a shortened URL
-    raw_msg.gsub!(/https?:\/\/[\w\-_\.\/?+&]+/) do |url|      
+    raw_msg.gsub!(/https?:\/\/[^ ]+/) do |url|      
+      
+      puts 'url: ' + url.inspect if @debug
+      
       Embiggen::URI(url).expand.to_s
     end
     
+    puts 'raw_msg: ' + raw_msg.inspect if @debug
+    
     # make the smartlinks into Markdown links        
     @raw_msg = smartlink(raw_msg)
+    
+    puts '@raw_msg: '  + @raw_msg.inspect if @debug
     
   end
 
@@ -81,12 +90,14 @@ class MTLite
     msg = RDiscount.new(raw_msg).to_html
     msg.gsub!(/<\/?p[^>]*>/,'') unless para
 
-    regex = %r([\w\-/?=.#\(\)]+)
+    regex = %r([^ <]+)
     # generate anchor tags for URLs which don't have anchor tags
     msg.gsub!(/(?:^(https?:#{regex})|\s(https?:#{regex}))/,' <a href="\2">\2</a>')    
     
     msg.gsub!(/(?<=\>)https?:#{regex}/) do |x|
-      url = x
+      
+      # unescapeHTML will transform &amp; to &
+      url = CGI.unescapeHTML x
       url2 = url.sub(/^https?:\/\//,'').sub(/^www\./,'')
       url3 = url2.length > 33 ? url2[0..33] + '...' : url2
       #" <a href='#{url}'>#{url3}</a>"
